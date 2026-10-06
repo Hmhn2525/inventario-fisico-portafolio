@@ -24,4 +24,4 @@ Conservar el significado de cero y vacío evita resultados engañosos. El estado
 
 ## Próxima fase
 
-Validar recuperación remota, concurrencia con identidades independientes, dispositivos físicos y aceptación del área en entornos aislados. Revisar licencias y documentar responsabilidades personales antes de ampliar la distribución.
+Validar recuperación remota, concurrencia con identidades independientes, dispositivos físicos y aceptación del área en entornos aislados. Las responsabilidades personales en la lógica de conciliación, interfaz React y API ASP.NET Core han sido confirmadas en el README; la definición de licencia queda pendiente en su fase propia.
