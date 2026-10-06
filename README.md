@@ -29,8 +29,7 @@ Una plataforma web con flujo estructurado: **Subir reporte → Contar → Ver re
 
 ## Aportación personal
 
-<!-- APORTACION-PERSONAL: sustituir tras la confirmación agrupada de responsabilidades. -->
-Las responsabilidades personales específicas se detallarán tras la confirmación agrupada. Este repositorio documenta el caso, la arquitectura observada y las pruebas sintéticas sin atribuir autoría exclusiva de los sistemas operativos.
+Definí la lógica de conciliación distinguiendo partidas pendientes de cero confirmado a partir de las necesidades reales observadas en almacén. Participé en el desarrollo de la interfaz de usuario con React y de la API con ASP.NET Core mediante un enfoque de desarrollo guiado, implementando el control de versiones por partida y el cálculo de diferencias para conciliar con el ERP.
 
 ## Tratamiento de cero, pendientes y diferencias
 
