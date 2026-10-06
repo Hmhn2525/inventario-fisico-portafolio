@@ -12,3 +12,9 @@ for row in rows:
 assert sum(row['counted'] is not None for row in rows) == 4
 assert sum(row['counted'] == '0' for row in rows) == 1
 print('5 casos sintéticos correctos: igualdad, faltante, sobrante, cero y pendiente.')
+
+print(f"{'Artículo':<10} {'Esperado':>10} {'Físico':>10} {'Diferencia':>12} {'Estado':<14}")
+for row in rows:
+    cnt = '-' if row['counted'] is None else row['counted']
+    diff = '-' if row['difference'] is None else row['difference']
+    print(f"{row['article']:<10} {row['expected']:>10} {cnt:>10} {diff:>12} {row['state']:<14}")

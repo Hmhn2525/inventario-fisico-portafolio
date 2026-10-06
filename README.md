@@ -1,50 +1,84 @@
-# Inventario Físico — caso de estudio
+# Inventario Físico
 
-Aplicación para importar un reporte de existencias, registrar cantidades físicas y obtener un resumen para conciliación. Este repositorio publica documentación nueva, una captura sintética revisada y un ejemplo didáctico. El código operativo permanece privado.
+Importación de existencias, registro de conteos físicos y conciliación trazable por almacén.
 
-## Problema y solución
+> [!NOTE]
+> **Repositorio documental.** El código operativo permanece privado en su propio repositorio. Aquí se publican documentación de arquitectura, evidencia técnica, captura de interfaz revisada y un ejemplo reproducible con datos sintéticos.
 
-Un conteo necesita distinguir artículos pendientes de artículos contados en cero, conservar cambios y evitar que dos personas sobrescriban una revisión. El recorrido vigente es **Subir reporte → Contar → Ver resumen**. El resultado apoya la conciliación externa; no actualiza automáticamente el ERP.
+[Probar el ejemplo](#probar-el-ejemplo) · [Caso de estudio](docs/case-study.md) · [Arquitectura](docs/architecture.md) · [Verificación y límites](docs/verification.md)
 
-## Funcionalidades observadas
+## Problema
 
-- Vista previa del Excel, incidencias y exclusiones explícitas.
-- Asociación de almacén y permisos comprobados en el servidor.
-- Búsqueda, filtros y paginación de partidas.
-- Cantidades decimales exactas, historial, versión esperada e identificadores de reintento.
-- Saldo y diferencia visibles después de guardar; pendientes diferenciados de cero.
-- Finalización y exportación del resultado.
-- Apariencia Sistema/Claro/Oscuro y diseño adaptable.
+Al auditar existencias en almacenes, las hojas de cálculo compartidas o impresas presentan riesgos críticos:
+- Confundir una partida **pendiente de conteo** con una existencia real de **cero**.
+- Sobrescribir conteos entre auditores simultáneos sin control de concurrencia.
+- Errores de redondeo en partidas con cantidades decimales o fraccionadas.
+- Falta de historial para identificar quién registró o modificó cada partida.
 
-## Tecnologías
+## Solución
 
-React, TypeScript, Vite, ASP.NET Core .NET 10, Entity Framework Core, Npgsql, PostgreSQL, ClosedXML y Playwright. La documentación privada registra un piloto con Render y Supabase. No se ha consultado su salud ni intervenido en él durante esta publicación.
+Una plataforma web con flujo estructurado: **Subir reporte → Contar → Ver resumen**.
+- Permite importar reportes Excel con vista previa y validación de incidencias.
+- Controla el acceso y asignación por almacén verificado en el servidor.
+- Proporciona una interfaz ágil de conteo con búsqueda, filtros, control de versión esperada por partida y registro de auditoría.
+- Genera un resumen analítico de diferencias para conciliación externa previa al ajuste en el ERP.
 
-## Evidencia
+![Inicio de Inventario Físico con sesión y API sintéticas](docs/images/inicio-sintetico.png)
 
-La revisión local del 5 de octubre de 2026 contrastó README, arquitectura, guía de conteo, informes de interfaz/publicación y código de conteo directo. El informe previo de interfaz registra 16 casos únicos Playwright sintéticos aprobados: diez de captura y seis visuales. Se cita como evidencia histórica; no se volvió a ejecutar esa suite para este caso documental.
+*Captura de la interfaz real durante una prueba con API y sesión simuladas, sin datos operativos de almacén.*
 
-![Inicio con sesión y API sintéticas](docs/images/inicio-sintetico.png)
+## Aportación personal
 
-Captura de la interfaz real en una prueba con API simulada, sin conteos operativos. No demuestra disponibilidad ni rendimiento del piloto.
+<!-- APORTACION-PERSONAL: sustituir tras la confirmación agrupada de responsabilidades. -->
+Las responsabilidades personales específicas se detallarán tras la confirmación agrupada. Este repositorio documenta el caso, la arquitectura observada y las pruebas sintéticas sin atribuir autoría exclusiva de los sistemas operativos.
 
-## Ejecutar el ejemplo independiente
+## Tratamiento de cero, pendientes y diferencias
 
-Requiere Python 3 y biblioteca estándar. Desde la raíz:
+Para garantizar la integridad en la conciliación, el sistema aplica reglas estrictas de negocio:
+
+| Estado | Definición y tratamiento | Impacto en conciliación |
+|---|---|---|
+| **Pendiente** (`null`) | La partida aún no ha sido revisada en el almacén. Se excluye del cálculo de diferencias para no falsear el inventario. | No genera ajuste; queda marcada como pendiente de auditar. |
+| **Cero** (`0`) | El auditor verificó físicamente el estante y confirmó la ausencia total del producto. | Si el sistema esperaba existencias, genera un **Faltante** formal por el total esperado. |
+| **Coincidencia** | Cantidad física coincide exactamente con la cantidad teórica esperada. | Diferencia = 0. Sin necesidad de ajuste. |
+| **Faltante / Sobrante** | Discrepancia cuantificada (`físico − esperado`) con precisión decimal exacta. | Se documenta la diferencia neta y porcentaje para justificación y conciliación. |
+
+## Probar el ejemplo
+
+Requiere Python 3 y biblioteca estándar. Desde la raíz del repositorio:
 
 ```text
 python examples/verify.py
 ```
 
-Comprueba diferencias exactas, cero y ausencia de conteo en cinco artículos inventados. No es una implementación de la API, permisos ni concurrencia del sistema original.
+Comprueba los 5 casos sintéticos representativos: igualdad, faltante, sobrante, confirmación explícita de cero y partida no contada (pendiente).
 
-## Documentación
+## Resultados comprobados
 
-- [Arquitectura](docs/architecture.md).
-- [Caso de estudio](docs/case-study.md).
-- [Verificación y límites](docs/verification.md).
-- [Ejemplo ficticio](examples/scenario.json).
+- **Tratamiento estricto de existencias:** distinción inequívoca entre cero confirmado y partida no contada en la lógica de cálculo.
+- **Comparación de cantidades y diferencias exactas:** cálculo con tipos decimales precisos sin pérdida por punto flotante.
+- **Evidencia histórica:** 16 casos de prueba sintéticos Playwright aprobados en el informe previo de interfaz (diez funcionales y seis de regresión visual responsive).
+- **Control de concurrencia:** validación de versión esperada por partida para prevenir sobreescrituras accidentales en operaciones de almacén.
 
-## Pendientes
+No se inventan métricas de ahorro de horas de auditoría ni capacidad volumétrica.
 
-Recuperación remota, identidades simultáneas, dispositivos físicos, aceptación del área y autorización de operación. No hay captura offline garantizada. Licencia y responsabilidades históricas pendientes de decisión expresa; no se asigna licencia al código privado.
+## Tecnologías
+
+| Alcance | Tecnologías |
+|---|---|
+| Observadas en la fuente | React, TypeScript, Vite, ASP.NET Core .NET 10, Entity Framework Core, PostgreSQL, Npgsql, ClosedXML, Playwright |
+| Ejemplo público | Python 3 (biblioteca estándar) |
+| Piloto documentado | Entorno piloto en Render / Supabase (no intervenido durante esta publicación) |
+
+## Límites
+
+- El código operativo completo y su base de datos son privados y no se distribuyen en este repositorio.
+- Las pruebas Playwright corresponden a evidencia histórica documentada; no se reejecutaron en esta fase documental.
+- Recuperación remota ante fallos, concurrencia masiva y pruebas en dispositivos físicos dedicados (scanners de almacén) quedan como pendientes técnicos.
+- La aplicación no modifica directamente el ERP corporativo; entrega un resumen estructurado para conciliación autorizada.
+
+Detalle técnico y condiciones pendientes: [verificación y límites](docs/verification.md).
+
+## Licencia
+
+Pendiente de decisión expresa. No se asigna licencia ni derechos sobre el código privado.
