@@ -14,9 +14,9 @@ El recorrido vigente simplifica la operación a subir, contar y consultar result
 
 ## Evidencia
 
-El informe de interfaz del 5 de octubre registra 16 casos únicos Playwright sintéticos aprobados a 360/768/1366 píxeles. La captura pública procede de esa revisión con API y sesión ficticias. El informe de despliegue documenta la publicación posterior de las correcciones y una comprobación de respaldo/restauración aislada. Son antecedentes documentados, no pruebas remotas repetidas en esta etapa.
+El informe de interfaz del 5 de octubre registra 16 casos únicos Playwright sintéticos aprobados a 360/768/1366 píxeles. La imagen pública ya existente queda como referencia visual con identidad sintética, no como evidencia nueva de este cambio. El informe de despliegue documenta la publicación posterior de las correcciones y una comprobación de respaldo/restauración aislada. Son antecedentes documentados, no pruebas remotas repetidas en esta etapa.
 
-El ejemplo nuevo comprueba cero, pendiente, igualdad, faltante y sobrante con datos inventados. No replica todo el sistema.
+El ejemplo reproducible muestra cada línea, sus estados y una diferencia neta de `-2.5` entre cuatro líneas contadas. Cero confirmado produce faltante; la línea `null` permanece pendiente y queda fuera del total. No replica todo el sistema ni envía ajustes al ERP.
 
 ## Aprendizajes y límites
 

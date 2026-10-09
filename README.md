@@ -3,9 +3,11 @@
 Importación de existencias, registro de conteos físicos y conciliación trazable por almacén.
 
 > [!NOTE]
-> **Repositorio documental.** El código operativo permanece privado en su propio repositorio. Aquí se publican documentación de arquitectura, evidencia técnica, captura de interfaz revisada y un ejemplo reproducible con datos sintéticos.
+> **Repositorio documental.** El código operativo permanece privado en su propio repositorio. Aquí se publican documentación de arquitectura, evidencia técnica, un mockup sintético del conteo y un ejemplo reproducible con datos ficticios.
 
 [Probar el ejemplo](#probar-el-ejemplo) · [Caso de estudio](docs/case-study.md) · [Arquitectura](docs/architecture.md) · [Verificación y límites](docs/verification.md)
+
+[Abrir demo interactiva](demo/index.html) · [Ampliar mockup sintético](docs/images/mockup-synthetic.svg)
 
 ## Problema
 
@@ -23,9 +25,11 @@ Una plataforma web con flujo estructurado: **Subir reporte → Contar → Ver re
 - Proporciona una interfaz ágil de conteo con búsqueda, filtros, control de versión esperada por partida y registro de auditoría.
 - Genera un resumen analítico de diferencias para conciliación externa previa al ajuste en el ERP.
 
-![Inicio de Inventario Físico con sesión y API sintéticas](docs/images/inicio-sintetico.png)
+![Mockup sintético del conteo y conciliación; no es captura de la UI original](docs/images/mockup-synthetic.svg)
 
-*Captura de la interfaz real durante una prueba con API y sesión simuladas, sin datos operativos de almacén.*
+El mockup y la demo usan cinco líneas inventadas. Un conteo cero participa como valor confirmado; una línea vacía queda pendiente y fuera de la diferencia neta.
+
+*Material visual de referencia del repositorio. Este ejemplo no verifica su origen ni acredita el flujo de la aplicación.*
 
 ## Aportación personal
 
@@ -50,11 +54,11 @@ Requiere Python 3 y biblioteca estándar. Desde la raíz del repositorio:
 python examples/verify.py
 ```
 
-Comprueba los 5 casos sintéticos representativos: igualdad, faltante, sobrante, confirmación explícita de cero y partida no contada (pendiente).
+Procesa cinco líneas ficticias de un conteo y muestra esperado, físico, diferencia y estado. Distingue cero confirmado de pendiente: cuatro líneas entran en la conciliación, una queda excluida y la diferencia neta de las contadas es `-2.5` unidades. No crea ajustes en el ERP.
 
 ## Resultados comprobados
 
-- **Tratamiento estricto de existencias:** distinción inequívoca entre cero confirmado y partida no contada en la lógica de cálculo.
+- **Conteo y conciliación reproducibles:** salida por línea para coincidente, faltante, sobrante, cero confirmado y pendiente; pendientes excluidas del total de diferencias.
 - **Comparación de cantidades y diferencias exactas:** cálculo con tipos decimales precisos sin pérdida por punto flotante.
 - **Evidencia histórica:** 16 casos de prueba sintéticos Playwright aprobados en el informe previo de interfaz (diez funcionales y seis de regresión visual responsive).
 - **Control de concurrencia:** validación de versión esperada por partida para prevenir sobreescrituras accidentales en operaciones de almacén.
